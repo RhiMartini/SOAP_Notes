@@ -2,189 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SOAP Note Builder</title>
+  <title>SOAP Notes – Continued Treatment</title>
   <style>
     body { font-family: sans-serif; max-width: 900px; margin: auto; }
-    textarea { width: 100%; margin-bottom: 10px; }
-    input[type="text"] { width: 100%; margin-bottom: 5px; }
-    .checkbox-grid { columns: 3; -webkit-columns: 3; -moz-columns: 3; }
-    .checkbox-grid div { break-inside: avoid; padding: 4px 0; }
-    .section { margin-bottom: 30px; }
-    .button-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+    .section-title {
+      background: #dce0e6;
+      color: #000;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-left: 5px solid #7c8ca3;
+      margin-top: 30px;
+    }
+    textarea, input[type="text"], select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 5px;
+      font-size: 1rem;
+    }
+    .button-row {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-<h1>SOAP Note Builder</h1>
+<!-- Subjective Section -->
+<div class="section-title">SUBJECTIVE</div>
+<textarea id="subjectiveText" rows="12" placeholder="The patient has an Rx for the following body parts...
 
-<!-- Subjective -->
-<div class="section">
-  <h2>Subjective</h2>
-  <label>Pain Report:</label><br>
-  <div id="painFields">
-    <input type="text" class="painInput" placeholder="e.g., Lumbar, R Shoulder 7/10">
-  </div>
-  <button type="button" onclick="addPainField()">➕ Add Another</button><br><br>
-
-  <label>Additional Symptoms:</label><br>
-  <textarea id="symptoms"></textarea>
-
-  <label>Sleep Disturbances:</label><br>
-  <input id="sleep" type="text" placeholder="e.g., 2-3x/night">
-
-  <label>Results from Last Massage:</label><br>
-  <textarea id="adlResults"></textarea>
-
-  <label>Patient Goals:</label><br>
-  <textarea id="goals"></textarea>
-
-  <label>Additional Reporting:</label><br>
-  <textarea id="extra"></textarea>
-</div>
-
-<!-- Objective -->
-<div class="section">
-  <h2>Objective</h2>
-  <label>Trigger Points in:</label><textarea id="triggerPoints"></textarea>
-  <label>Fibrous Tissue in:</label><textarea id="fibrous"></textarea>
-  <label>Myofascial Restrictions in:</label><textarea id="myofascial"></textarea>
-
-  <label>Therapist treated the following areas:</label>
-  <div class="checkbox-grid" id="treatmentAreas">
-    <div><input type="checkbox" id="head"> Head</div>
-    <div><input type="checkbox" id="face"> Face</div>
-    <div><input type="checkbox" id="neck"> Neck</div>
-    <div><input type="checkbox" id="shoulders"> Shoulders <select id="shouldersSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="upperExtremity"> Upper Extremity <select id="upperExtremitySide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="elbow"> Elbow <select id="elbowSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="wrist"> Wrist <select id="wristSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="hand"> Hand <select id="handSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="midBack"> Mid Back</div>
-    <div><input type="checkbox" id="lowBack"> Low Back</div>
-    <div><input type="checkbox" id="hip"> Hip <select id="hipSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="lowerExtremity"> Lower Extremity <select id="lowerExtremitySide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="knee"> Knee <select id="kneeSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="ankle"> Ankle <select id="ankleSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-    <div><input type="checkbox" id="foot"> Foot <select id="footSide"><option value="">--</option><option>R</option><option>L</option><option>BL</option></select></div>
-  </div>
-
-  <label>Therapist treated in these positions:</label><br>
-  <input type="checkbox" id="prone"> Prone
-  <input type="checkbox" id="sideLying"> Side Lying
-  <input type="checkbox" id="supine"> Supine
-
-  <br><br><label>Tools, Techniques, Topicals:</label><textarea id="tools"></textarea>
-  <label>Additional Reporting:</label><textarea id="objectiveExtra"></textarea>
-</div>
-
-<!-- Assessment -->
-<div class="section">
-  <h2>Assessment</h2>
-  <p>1. Reduction in pain levels over the course of the authorization.</p>
-  <p>2. Increase total hours of sleep and decrease the number of times the client wakes up due to pain.</p>
-  <p>3. Increase ability to perform the activities of daily living.</p>
-  <label>4. The therapist reports the following improvements:</label>
-  <textarea id="improvements"></textarea>
-
-  <label>Additional Notes:</label><textarea id="assessmentExtra"></textarea>
-</div>
-
-<!-- Plan -->
-<div class="section">
-  <h2>Plan</h2>
-  <label>1. The following frequency and duration:</label><br>
-  <select id="frequencyCount">
-    <option value="">-- # --</option><option>1</option><option>2</option><option>3</option><option>4</option>
-  </select>
-  <select id="frequencyPeriod">
-    <option value="">-- Period --</option><option>Week</option><option>Month</option>
-  </select>
-  <select id="frequencyBasis">
-    <option value="">-- Based on --</option><option>Per doctor's recommendation</option><option>Per MT recommendation</option>
-  </select>
-
-  <label>2. Treatment in the following positions:</label><br>
-  <input type="checkbox" id="planProne"> Prone
-  <input type="checkbox" id="planSideLying"> Side Lying
-  <input type="checkbox" id="planSupine"> Supine
-  <br>
-  <input type="text" id="positionOther1" placeholder="Other position...">
-  <input type="text" id="positionOther2" placeholder="Other position...">
-
-  <label>3. Muscles to be treated next session:</label><textarea id="nextMuscles"></textarea>
-  <label>4. Self-care tasks for the patient:</label><textarea id="selfCare"></textarea>
-  <label>5. Additional Notes:</label><textarea id="planExtra"></textarea>
-
-  <label>Therapist Signature:</label><input type="text" id="signature">
-</div>
-
+Have they had a professional massage before? [  ] Yes     [  ] No
+..."></textarea>
 <div class="button-row">
-  <button onclick="copyAll()">📋 Copy Entire SOAP Note</button>
+  <button onclick="copySection('subjectiveText')">📋 Copy Subjective</button>
 </div>
 
-<textarea id="soapClipboard" style="position:absolute; left:-9999px;"></textarea>
+<!-- Objective Section -->
+<div class="section-title">OBJECTIVE</div>
+<textarea id="objectiveText" rows="12" placeholder="Therapist palpated the following:
+- Trigger Points in:
+- Fibrous (Crunchy) Tissue in:
+- Myofascial Restrictions in:
+
+Therapist provided treatment in the following areas:
+[  ] Head [  ] Face [  ] Neck [  ] Shoulders (R/L/BL)...
+..."></textarea>
+<div class="button-row">
+  <button onclick="copySection('objectiveText')">📋 Copy Objective</button>
+</div>
+
+<!-- Assessment Section -->
+<div class="section-title">ASSESSMENT</div>
+<textarea id="assessmentText" rows="10" placeholder="Goals of treatment are:
+
+1. Reduction in pain levels over the course of the authorization.
+2. Increase total hours of sleep and decrease the number of times the client wakes up due to pain.
+3. Increase ability to perform the activities of daily living.
+
+4. The therapist reports the following improvements:
+
+
+Additional Notes:
+"></textarea>
+<div class="button-row">
+  <button onclick="copySection('assessmentText')">📋 Copy Assessment</button>
+</div>
+
+<!-- Plan Section -->
+<div class="section-title">PLAN</div>
+<textarea id="planText" rows="10" placeholder="MT Recommends:
+1. The following frequency and duration:
+(Select): ___x/week or ___x/month – Per Doctor or MT
+
+2. Treatment in the following positions:
+Prone / Side Lying / Supine / Other:
+
+3. The following muscles to be treated next session:
+
+
+4. The following self care tasks for the patient to do at home:
+
+
+5. Additional notes:
+
+
+Therapist Signature:
+Date Signed: [auto-generated]
+"></textarea>
+<div class="button-row">
+  <button onclick="copyPlan()">📋 Copy Plan (with Date)</button>
+</div>
+
+<textarea id="hiddenClipboard" style="position: absolute; left: -9999px;"></textarea>
 
 <script>
-  function addPainField() {
-    const container = document.getElementById('painFields');
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'painInput';
-    input.placeholder = 'e.g., Cervical 6/10';
-    container.appendChild(input);
-  }
+function copySection(id) {
+  const content = document.getElementById(id).value.trim();
+  if (!content) return alert("Section is empty.");
+  const hidden = document.getElementById("hiddenClipboard");
+  hidden.value = content;
+  hidden.select();
+  hidden.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  alert("Section copied!");
+}
 
-  function copyAll() {
-    const now = new Date().toLocaleString();
-
-    const getChecked = id => document.getElementById(id)?.checked ? id : '';
-    const getValue = id => document.getElementById(id)?.value?.trim() || '';
-
-    const pain = Array.from(document.querySelectorAll('.painInput'))
-      .map(i => i.value.trim()).filter(Boolean).join('; ');
-
-    const subjective = `SUBJECTIVE
-Pain Report: ${pain}
-Symptoms: ${getValue('symptoms')}
-Sleep: ${getValue('sleep')}
-Last Massage: ${getValue('adlResults')}
-Goals: ${getValue('goals')}
-Extra: ${getValue('extra')}`;
-
-    const objective = `
-
-OBJECTIVE
-Trigger Points: ${getValue('triggerPoints')}
-Fibrous Tissue: ${getValue('fibrous')}
-Myofascial Restrictions: ${getValue('myofascial')}
-Tools/Techniques: ${getValue('tools')}
-Extra: ${getValue('objectiveExtra')}`;
-
-    const assessment = `
-
-ASSESSMENT
-Improvements: ${getValue('improvements')}
-Extra: ${getValue('assessmentExtra')}`;
-
-    const plan = `
-
-PLAN
-Frequency: ${getValue('frequencyCount')} per ${getValue('frequencyPeriod')} - ${getValue('frequencyBasis')}
-Positions: ${(getChecked('planProne')) + ' ' + (getChecked('planSideLying')) + ' ' + (getChecked('planSupine'))}
-Other Positions: ${getValue('positionOther1')} ${getValue('positionOther2')}
-Next Session Muscles: ${getValue('nextMuscles')}
-Self-Care: ${getValue('selfCare')}
-Notes: ${getValue('planExtra')}
-Therapist Signature: ${getValue('signature')}
-Date Signed: ${now}`;
-
-    const result = subjective + objective + assessment + plan;
-    const output = document.getElementById('soapClipboard');
-    output.value = result.trim();
-    output.select();
-    document.execCommand("copy");
-    alert("SOAP Note copied to clipboard.");
-  }
+function copyPlan() {
+  const base = document.getElementById("planText").value.trim();
+  if (!base) return alert("Plan section is empty.");
+  const timestamp = "Date Signed: June 26, 2025 at 10:17 PM";
+  const final = base + "\n\n" + timestamp;
+  const hidden = document.getElementById("hiddenClipboard");
+  hidden.value = final;
+  hidden.select();
+  hidden.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  alert("Plan section copied with timestamp!");
+}
 </script>
 
 </body>
