@@ -1,127 +1,138 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>SOAP Notes – Continued Treatment</title>
-  <style>
-    body { font-family: sans-serif; max-width: 900px; margin: auto; }
-    .section-title {
-      background: #dce0e6;
-      color: #000;
-      font-weight: bold;
-      padding: 8px 12px;
-      border-left: 5px solid #7c8ca3;
-      margin-top: 30px;
-    }
-    textarea, input[type="text"], select {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 5px;
-      font-size: 1rem;
-    }
-    .button-row {
-      display: flex;
-      justify-content: flex-start;
-      gap: 10px;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
+<style>
+  .section-bar {
+    background-color: #cce0ff;
+    padding: 8px 12px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    border-left: 6px solid #004080;
+  }
+  .copy-btn {
+    margin-top: 10px;
+  }
+  textarea {
+    width: 100%;
+    margin-top: 5px;
+  }
+</style>
 
-<!-- Subjective Section -->
-<div class="section-title">SUBJECTIVE</div>
-<textarea id="subjectiveText" rows="12" placeholder="The patient has an Rx for the following body parts...
-
-Have they had a professional massage before? [  ] Yes     [  ] No
-..."></textarea>
-<div class="button-row">
-  <button onclick="copySection('subjectiveText')">📋 Copy Subjective</button>
+<!-- SUBJECTIVE -->
+<div>
+  <div class="section-bar">SUBJECTIVE</div>
+  <textarea id="subjectiveSection" rows="12" placeholder="Enter subjective notes..."></textarea>
+  <button class="copy-btn" onclick="copySection('subjectiveSection')">📋 Copy Subjective Section</button>
 </div>
 
-<!-- Objective Section -->
-<div class="section-title">OBJECTIVE</div>
-<textarea id="objectiveText" rows="12" placeholder="Therapist palpated the following:
-- Trigger Points in:
-- Fibrous (Crunchy) Tissue in:
-- Myofascial Restrictions in:
-
-Therapist provided treatment in the following areas:
-[  ] Head [  ] Face [  ] Neck [  ] Shoulders (R/L/BL)...
-..."></textarea>
-<div class="button-row">
-  <button onclick="copySection('objectiveText')">📋 Copy Objective</button>
+<!-- OBJECTIVE -->
+<div>
+  <div class="section-bar">OBJECTIVE</div>
+  <textarea id="objectiveSection" rows="12" placeholder="Enter objective notes..."></textarea>
+  <button class="copy-btn" onclick="copySection('objectiveSection')">📋 Copy Objective Section</button>
 </div>
 
-<!-- Assessment Section -->
-<div class="section-title">ASSESSMENT</div>
-<textarea id="assessmentText" rows="10" placeholder="Goals of treatment are:
+<!-- ASSESSMENT -->
+<div>
+  <div class="section-bar">ASSESSMENT</div>
+  <textarea id="assessmentSection" rows="12">Goals of treatment are:
 
 1. Reduction in pain levels over the course of the authorization.
-2. Increase total hours of sleep and decrease the number of times the client wakes up due to pain.
-3. Increase ability to perform the activities of daily living.
+
+2. Increase total hours of sleep and decrease the number of times the client wakes up due to pain 
+
+3. Increase ability to perform the activities of daily living
 
 4. The therapist reports the following improvements:
 
 
+
+
 Additional Notes:
-"></textarea>
-<div class="button-row">
-  <button onclick="copySection('assessmentText')">📋 Copy Assessment</button>
+</textarea>
+  <button class="copy-btn" onclick="copySection('assessmentSection')">📋 Copy Assessment Section</button>
 </div>
 
-<!-- Plan Section -->
-<div class="section-title">PLAN</div>
-<textarea id="planText" rows="10" placeholder="MT Recommends:
-1. The following frequency and duration:
-(Select): ___x/week or ___x/month – Per Doctor or MT
+<!-- PLAN -->
+<div>
+  <div class="section-bar">PLAN</div>
+  <label><strong>1. The following frequency and duration:</strong></label><br>
+  <select id="freq1">
+    <option value="">--</option>
+    <option>1</option><option>2</option><option>3</option><option>4</option>
+  </select>
+  <span>treatments every</span>
+  <select id="interval1">
+    <option value="">--</option>
+    <option>week</option><option>month</option>
+  </select>
+  <span>—</span>
+  <select id="recommend1">
+    <option value="">--</option>
+    <option>Per doctor's recommendations</option>
+    <option>Per MT recommendations</option>
+  </select><br><br>
 
-2. Treatment in the following positions:
-Prone / Side Lying / Supine / Other:
+  <label><strong>2. Treatment in the following positions:</strong></label><br>
+  <input type="checkbox" id="prone"> Prone
+  <input type="checkbox" id="side"> Side Lying
+  <input type="checkbox" id="supine"> Supine<br>
+  <input type="text" id="posOther1" placeholder="Other:"><br>
+  <input type="text" id="posOther2" placeholder="Other:"><br><br>
 
-3. The following muscles to be treated next session:
+  <label><strong>3. The following muscles to be treated next session:</strong></label><br>
+  <textarea id="musclesNext" rows="2"></textarea><br>
 
+  <label><strong>4. The following self care tasks for the patient to do at home:</strong></label><br>
+  <textarea id="homeCare" rows="2"></textarea><br>
 
-4. The following self care tasks for the patient to do at home:
+  <label><strong>5. Additional notes:</strong></label><br>
+  <textarea id="planExtra" rows="2"></textarea><br>
 
+  <label><strong>Therapist Signature:</strong></label>
+  <input type="text" id="signature" placeholder="Your name..."><br>
 
-5. Additional notes:
+  <label><strong>Date Signed:</strong></label>
+  <input type="text" id="timestamp" value="June 26, 2025 at 10:20 PM" readonly><br><br>
 
-
-Therapist Signature:
-Date Signed: [auto-generated]
-"></textarea>
-<div class="button-row">
-  <button onclick="copyPlan()">📋 Copy Plan (with Date)</button>
+  <button class="copy-btn" onclick="copyPlan()">📋 Copy Plan Section</button>
 </div>
-
-<textarea id="hiddenClipboard" style="position: absolute; left: -9999px;"></textarea>
 
 <script>
 function copySection(id) {
   const content = document.getElementById(id).value.trim();
-  if (!content) return alert("Section is empty.");
-  const hidden = document.getElementById("hiddenClipboard");
-  hidden.value = content;
-  hidden.select();
-  hidden.setSelectionRange(0, 99999);
-  document.execCommand("copy");
-  alert("Section copied!");
+  if (!content) return alert("Nothing to copy.");
+  navigator.clipboard.writeText(content)
+    .then(() => alert("Copied!"))
+    .catch(() => alert("Failed to copy."));
 }
 
 function copyPlan() {
-  const base = document.getElementById("planText").value.trim();
-  if (!base) return alert("Plan section is empty.");
-  const timestamp = "Date Signed: June 26, 2025 at 10:17 PM";
-  const final = base + "\n\n" + timestamp;
-  const hidden = document.getElementById("hiddenClipboard");
-  hidden.value = final;
-  hidden.select();
-  hidden.setSelectionRange(0, 99999);
-  document.execCommand("copy");
-  alert("Plan section copied with timestamp!");
+  const freq = document.getElementById("freq1").value;
+  const interval = document.getElementById("interval1").value;
+  const rec = document.getElementById("recommend1").value;
+  const pos = [
+    document.getElementById("prone").checked ? "Prone" : "",
+    document.getElementById("side").checked ? "Side Lying" : "",
+    document.getElementById("supine").checked ? "Supine" : "",
+    document.getElementById("posOther1").value.trim(),
+    document.getElementById("posOther2").value.trim()
+  ].filter(Boolean).join(", ");
+
+  const muscles = document.getElementById("musclesNext").value.trim();
+  const home = document.getElementById("homeCare").value.trim();
+  const extra = document.getElementById("planExtra").value.trim();
+  const signature = document.getElementById("signature").value.trim();
+  const date = document.getElementById("timestamp").value.trim();
+
+  let result = "MT Recommends:\n";
+  result += `1. ${freq && interval ? freq + " treatments every " + interval : ""} ${rec ? "(" + rec + ")" : ""}\n\n`;
+  result += `2. Treatment in the following positions: ${pos}\n\n`;
+  result += `3. Muscles to be treated next session: ${muscles}\n\n`;
+  result += `4. Self care tasks for patient: ${home}\n\n`;
+  result += `5. Additional notes: ${extra}\n\n`;
+  result += `Therapist Signature: ${signature}\nDate Signed: ${date}`;
+
+  navigator.clipboard.writeText(result)
+    .then(() => alert("Plan section copied!"))
+    .catch(() => alert("Failed to copy."));
 }
 </script>
-
-</body>
-</html>
