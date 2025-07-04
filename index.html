@@ -273,6 +273,14 @@
 <div><label><input type="checkbox" value="Climbing"> Climbing</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Climbing" style="width: 100%;"></div></div>
 
 </div><br>
+<script>
+function toggleDetailInput(button) {
+  const detailDiv = button.nextElementSibling;
+  if (detailDiv) {
+    detailDiv.style.display = detailDiv.style.display === 'none' ? 'block' : 'none';
+  }
+}
+</script>
 
 
 <!-- ADLs AFFECTED BY PAIN -->
