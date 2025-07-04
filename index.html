@@ -32,66 +32,24 @@
 
 <!-- INJURY REPORT -->
 
-<h3 style="color: green; border-bottom: 2px solid #2196F3;">INJURY REPORT</h3>
-
-<label>Date injury occurred:</label>
-
+<h3>INJURY REPORT</h3>
+<label>Date injury occurred:</label><br>
 <input type="date" id="injuryDate" style="width: 100%;"><br><br>
-
-
-<label>Details of how the injury occurred:</label>
-
+<label>Details of how the injury occurred:</label><br>
 <textarea id="injuryDetails" style="width: 100%;"></textarea><br><br>
-
-
 <label>Other treatments received:</label>
-
 <div id="treatmentList"><input type="text" style="width: 100%; margin-bottom: 5px;"></div>
-
 <button type="button" onclick="addField('treatmentList')">➕ Add Treatment</button><br><br>
-
-
-<label>Effectiveness of other treatments:</label>
-
+<label>Effectiveness of other treatments:</label><br>
 <textarea id="treatmentEffectiveness" style="width: 100%;"></textarea><br><br>
-
-
 <label>Medications prescribed:</label>
-
 <div id="medList"><input type="text" style="width: 100%; margin-bottom: 5px;"></div>
-
 <button type="button" onclick="addField('medList')">➕ Add Medication</button><br><br>
 
 
 <!-- PAIN REPORT -->
 
-<h3 style="color: green; border-bottom: 2px solid #2196F3;">PAIN REPORT</h3>
-
-<label><strong>Additional Body Parts Reported with Pain:</strong></label><br>
-
-<select id="additionalPartSelect">
-
-<option value="">-- Select Body Part --</option>
-
-</select>
-
-<select id="additionalSideSelect">
-
-<option value="">--</option>
-
-<option value="R">R</option>
-
-<option value="L">L</option>
-
-<option value="BL">BL</option>
-
-</select>
-
-<button type="button" onclick="addAdditionalPart()">➕ Add</button>
-
-<ul id="additionalPartsList" style="list-style-type: none; padding-left: 0; margin-top: 10px;"></ul><br>
-
-
+<h3>PAIN REPORT</h3>
 <div id="painReportTable"></div><br>
 
 
@@ -208,191 +166,21 @@
 
 </div><br>
 
-
-<script>
-
-const rxParts = [
-
-"Head", "Cervical", "Thoracic", "Lumbar", "Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand",
-
-"Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"
-
-];
-
-
-function buildRxChecklist() {
-
-const container = document.getElementById("rxBodyParts");
-
-const select = document.getElementById("additionalPartSelect");
-
-rxParts.forEach(part => {
-
-const div = document.createElement("div");
-
-const id = part.replace(/\s+/g, '').toLowerCase();
-
-let html = `<input type='checkbox' id='${id}' onchange='updatePainReport()'> ${part}`;
-
-if (["Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand", "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"].includes(part)) {
-
-html += ` <select id='${id}Side' onchange='updatePainReport()'>
-
-<option value=''>--</option>
-
-<option value='R'>R</option>
-
-<option value='L'>L</option>
-
-<option value='BL'>BL</option>
-
-</select>`;
-
-}
-
-div.innerHTML = html;
-
-container.appendChild(div);
-
-
-const option = document.createElement("option");
-
-option.value = part;
-
-option.textContent = part;
-
-select.appendChild(option);
-
-});
-
-}
-
-
-function addField(containerId) {
-
-const container = document.getElementById(containerId);
-
-const input = document.createElement('input');
-
-input.type = 'text';
-
-input.style = 'width: 100%; margin-bottom: 5px;';
-
-container.appendChild(input);
-
-}
-
-
-function addAdditionalPart() {
-
-const part = document.getElementById("additionalPartSelect").value;
-
-const side = document.getElementById("additionalSideSelect").value;
-
-const list = document.getElementById("additionalPartsList");
-
-if (!part) return;
-
-const item = document.createElement("li");
-
-item.textContent = side ? `${side} ${part}` : part;
-
-list.appendChild(item);
-
-updatePainReport();
-
-}
-
-
-function updatePainReport() {
-
-const painTable = document.getElementById("painReportTable");
-
-let html = `<table style='width:100%;'><tr><th>Body Part</th><th>Pain Level</th></tr>`;
-
-rxParts.forEach(part => {
-
-const id = part.replace(/\s+/g, '').toLowerCase();
-
-const cb = document.getElementById(id);
-
-if (cb && cb.checked) {
-
-const side = document.getElementById(id + 'Side')?.value;
-
-const label = side ? `${side} ${part}` : part;
-
-html += `<tr><td>${label}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
-
-}
-
-});
-
-const list = document.getElementById("additionalPartsList").children;
-
-for (let item of list) {
-
-html += `<tr><td>${item.textContent}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
-
-}
-
-html += `</table>`;
-
-painTable.innerHTML = html;
-
-}
-
-buildRxChecklist();
-
-</script>
-
 <!-- MOTIONS AFFECTING DAILY LIVING -->
 
-<h3 style="color: green; border-bottom: 2px solid #2196F3;">MOTIONS AFFECTING DAILY LIVING</h3>
-
-<div id="motionsAffecting" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-
-<div><label><input type="checkbox" value="Sitting"> Sitting</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Sitting" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Standing"> Standing</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Standing" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Twisting"> Twisting</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Twisting" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Bending"> Bending</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Bending" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Crouching"> Crouching</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Crouching" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Reaching"> Reaching</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Reaching" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Squatting"> Squatting</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Squatting" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Climbing"> Climbing</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Climbing" style="width: 100%;"></div></div>
-
+<h3>MOTIONS AFFECTING DAILY LIVING</h3>
+<div id="motionsAffecting" class="grid-4col">
+  <div><label><input type="checkbox" value="Sitting"> Sitting</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Sitting" style="width: 100%;"></div></div>
+  <div><label><input type="checkbox" value="Standing"> Standing</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Standing" style="width: 100%;"></div></div>
 </div><br>
 
 
 <!-- ADLs AFFECTED BY PAIN -->
 
-<h3 style="color: green; border-bottom: 2px solid #2196F3;">ADLs AFFECTED BY PAIN</h3>
-
-<div id="adlsAffecting" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-
-<div><label><input type="checkbox" value="Ambulating"> Ambulating</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Ambulating" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Eating"> Eating</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Eating" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Personal Hygiene"> Personal Hygiene</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Personal Hygiene" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Dressing"> Dressing</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Dressing" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Housework & Maintenance"> Housework & Maintenance</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Housework and Maintenance" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Work"> Work</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Work" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Transportation"> Transportation</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Transportation" style="width: 100%;"></div></div>
-
-<div><label><input type="checkbox" value="Shopping & Meal Prep"> Shopping & Meal Prep</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Shopping and Meal Prep" style="width: 100%;"></div></div>
-
+<h3>ADLs AFFECTED BY PAIN</h3>
+<div id="adlsAffecting" class="grid-4col">
+  <div><label><input type="checkbox" value="Ambulating"> Ambulating</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Ambulating" style="width: 100%;"></div></div>
+  <div><label><input type="checkbox" value="Eating"> Eating</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Eating" style="width: 100%;"></div></div>
 </div><br>
 
 
@@ -426,146 +214,134 @@ buildRxChecklist();
 
 <button onclick="
 
-const text = document.getElementById('clipboardOutput');
-
-let output = '';
-
-
-const rxChecked = Array.from(document.querySelectorAll('#rxBodyParts input[type=checkbox]:checked')).map(cb => {
-
-const label = cb.nextSibling.textContent.trim();
-
-const side = cb.parentElement.querySelector('select')?.value || '';
-
-return side ? `${side} ${label}` : label;
-
-}).join(', ');
-
-
-const hadMassage = document.querySelector('input[name=hadMassage]:checked')?.value || '';
-
-const newClient = document.querySelector('input[name=newClient]:checked')?.value || '';
-
-const injuryDate = document.getElementById('injuryDate')?.value;
-
-const injuryDetails = document.getElementById('injuryDetails')?.value;
-
-
-const treatments = Array.from(document.querySelectorAll('#treatmentList input')).map(el => el.value.trim()).filter(Boolean).join('\\n');
-
-const effectiveness = document.getElementById('treatmentEffectiveness')?.value;
-
-const meds = Array.from(document.querySelectorAll('#medList input')).map(el => el.value.trim()).filter(Boolean).join('\\n');
-
-
-const pains = Array.from(document.querySelectorAll('#painReportTable select')).map(sel => {
-
-const row = sel.closest('tr');
-
-const part = row?.querySelector('td')?.innerText;
-
-const val = sel.value;
-
-return part && val ? `${part}: ${val}/10` : '';
-
-}).filter(Boolean).join('\\n');
-
-
-const sleepHours = document.getElementById('sleepHours')?.value;
-
-const wakeUps = document.getElementById('wakeUps')?.value;
-
-const sleepBefore = document.getElementById('sleepBefore')?.value;
-
-const sleepAfter = document.getElementById('sleepAfter')?.value;
-
-
-const motions = Array.from(document.querySelectorAll('#motionsAffecting input[type=checkbox]:checked')).map(cb => {
-
-const label = cb.value || cb.parentElement.textContent.trim();
-
-const detail = cb.closest('div').querySelector('input[type=text]')?.value;
-
-return detail ? `${label} (${detail})` : label;
-
-}).join(', ');
-
-
-const adls = Array.from(document.querySelectorAll('#adlsAffecting input[type=checkbox]:checked')).map(cb => {
-
-const label = cb.value || cb.parentElement.textContent.trim();
-
-const detail = cb.closest('div').querySelector('input[type=text]')?.value;
-
-return detail ? `${label} (${detail})` : label;
-
-}).join(', ');
-
-
-const workStatus = document.querySelector('input[name=workStatus]:checked')?.parentElement.innerText.trim();
-
-const selfCare = document.getElementById('selfCare')?.value;
-
-const additional = document.getElementById('additionalReporting')?.value;
-
-
-output =
-
-'SUBJECTIVE SECTION\\n\\n' +
-
-'Rx Body Parts: ' + rxChecked + '\\n\\n' +
-
-'Professional Massage Before?: ' + hadMassage + '\\n' +
-
-'New to CMT?: ' + newClient + '\\n\\n' +
-
-'INJURY REPORT\\n' +
-
-'Date: ' + injuryDate + '\\n' +
-
-'Details: ' + injuryDetails + '\\n\\n' +
-
-'Other Treatments:\\n' + treatments + '\\n\\n' +
-
-'Effectiveness:\\n' + effectiveness + '\\n\\n' +
-
-'Medications:\\n' + meds + '\\n\\n' +
-
-'PAIN REPORT:\\n' + pains + '\\n\\n' +
-
-'SLEEP REPORT\\n' +
-
-'Sleep Hours/Night: ' + sleepHours + '\\n' +
-
-'Wake-ups due to Pain: ' + wakeUps + '\\n' +
-
-'Sleep Before Injury: ' + sleepBefore + '\\n' +
-
-'Sleep After Injury: ' + sleepAfter + '\\n\\n' +
-
-'MOTIONS AFFECTING DAILY LIVING:\\n' + motions + '\\n\\n' +
-
-'ADLs AFFECTED BY PAIN:\\n' + adls + '\\n\\n' +
-
-'WORK STATUS:\\n' + workStatus + '\\n\\n' +
-
-'Self-Care at Home:\\n' + selfCare + '\\n\\n' +
-
-'Additional Reporting:\\n' + additional;
-
-
-text.value = output;
-
-text.select();
-
-document.execCommand('copy');
-
-alert('Subjective Section copied!');
-
-">
-
-📋 Copy Subjective Section
-
-</button>
-
-<textarea id="clipboardOutput" style="position: absolute; left: -9999px;"></textarea>
+<script>
+const rxParts = [
+  "Head", "Cervical", "Thoracic", "Lumbar", "Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand",
+  "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"
+];
+
+function buildRxChecklist() {
+  const container = document.getElementById("rxBodyParts");
+  rxParts.forEach(part => {
+    const div = document.createElement("div");
+    const id = part.replace(/\s+/g, '').toLowerCase();
+    let html = `<label><input type='checkbox' id='${id}' onchange='updatePainReport()'> ${part}</label>`;
+    if (["Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand", "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"].includes(part)) {
+      html += ` <select id='${id}Side' onchange='updatePainReport()'>
+        <option value=''>--</option>
+        <option value='R'>R</option>
+        <option value='L'>L</option>
+        <option value='BL'>BL</option>
+      </select>`;
+    }
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+}
+
+function updatePainReport() {
+  const painTable = document.getElementById("painReportTable");
+  let html = `<table style='width:100%;'><tr><th>Body Part</th><th>Pain Level</th></tr>`;
+  rxParts.forEach(part => {
+    const id = part.replace(/\s+/g, '').toLowerCase();
+    const cb = document.getElementById(id);
+    if (cb && cb.checked) {
+      const side = document.getElementById(id + 'Side')?.value;
+      const label = side ? `${side} ${part}` : part;
+      html += `<tr><td>${label}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
+    }
+  });
+  html += `</table>`;
+  painTable.innerHTML = html;
+}
+
+function toggleDetailInput(button) {
+  const detailDiv = button.parentElement.querySelector('.detailInput');
+  if (detailDiv) {
+    detailDiv.style.display = detailDiv.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+function addField(containerId) {
+  const container = document.getElementById(containerId);
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.style = 'width: 100%; margin-bottom: 5px;';
+  container.appendChild(input);
+}
+
+function copyToClipboard() {
+  const output = [];
+
+  const rxChecked = Array.from(document.querySelectorAll('#rxBodyParts input[type=checkbox]:checked')).map(cb => {
+    const label = cb.nextSibling.textContent.trim();
+    const side = cb.parentElement.querySelector('select')?.value || '';
+    return side ? `- ${side} ${label}` : `- ${label}`;
+  });
+  output.push("SUBJECTIVE\nThe patient has an Rx for the following body parts:");
+  output.push(...rxChecked, "");
+
+  const hadMassage = document.querySelector('input[name=hadMassage]:checked')?.value || 'No';
+  const newClient = document.querySelector('input[name=newClient]:checked')?.value || 'No';
+  output.push(`Has the client had a professional massage before? ${hadMassage}`);
+  output.push(`Is the client new to CMT? ${newClient}\n`);
+
+  output.push("INJURY REPORT\n");
+  output.push(`Date injury occurred: ${document.getElementById("injuryDate")?.value}`);
+  output.push("\nDetails of how injury occurred:");
+  output.push(`- ${document.getElementById("injuryDetails")?.value}`);
+
+  const treatments = Array.from(document.querySelectorAll('#treatmentList input')).map(el => el.value.trim()).filter(Boolean);
+  if (treatments.length) {
+    output.push("\nOther treatments received:");
+    treatments.forEach(t => output.push("- " + t));
+  }
+
+  const effectiveness = document.getElementById("treatmentEffectiveness")?.value;
+  if (effectiveness) output.push("\nEffectiveness of other treatments:\n- " + effectiveness);
+
+  const meds = Array.from(document.querySelectorAll('#medList input')).map(el => el.value.trim()).filter(Boolean);
+  if (meds.length) output.push("\nMedications prescribed:\n- " + meds.join(', '));
+
+  output.push("\n\nPAIN REPORT\n\nPain reported in:");
+  document.querySelectorAll('#painReportTable tr').forEach((tr, i) => {
+    if (i === 0) return;
+    const part = tr.children[0].innerText;
+    const level = tr.children[1].querySelector('select').value;
+    output.push(`- ${part} ${level}/10`);
+  });
+
+  output.push("\nSLEEP REPORT\n");
+  output.push(`-Total sleep per night: ${document.getElementById("sleepHours")?.value}`);
+  output.push(`-Total times waking due to pain: ${document.getElementById("wakeUps")?.value}x/night`);
+  output.push(`-Sleep position before injury: ${document.getElementById("sleepBefore")?.value}`);
+  output.push(`-Sleep position after injury: ${document.getElementById("sleepAfter")?.value}`);
+
+  const motions = Array.from(document.querySelectorAll('#motionsAffecting input[type=checkbox]:checked')).map(cb => cb.value).join(', ');
+  output.push("\nMOTIONS AFFECTING DAILY LIVING\n-" + motions);
+
+  const adls = Array.from(document.querySelectorAll('#adlsAffecting input[type=checkbox]:checked')).map(cb => cb.value).join(', ');
+  output.push("\nADLs AFFECTED BY PAIN\n-" + adls);
+
+  const workStatus = document.querySelector('input[name=workStatus]:checked')?.parentElement.innerText.trim();
+  if (workStatus) output.push("\nWORK STATUS\n-" + workStatus);
+
+  const selfCare = document.getElementById('selfCare')?.value;
+  if (selfCare) output.push("\n\nSelf care tasks done at home:\n-" + selfCare);
+
+  const additional = document.getElementById('additionalReporting')?.value;
+  if (additional) output.push("\n\nAdditional Reporting:\n-" + additional);
+
+  const text = document.createElement('textarea');
+  text.style.position = 'absolute';
+  text.style.left = '-9999px';
+  text.value = output.join("\n");
+  document.body.appendChild(text);
+  text.select();
+  document.execCommand('copy');
+  document.body.removeChild(text);
+  alert('Subjective Section copied to clipboard in formatted style.');
+}
+
+buildRxChecklist();
+</script>
