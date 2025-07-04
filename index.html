@@ -1,10 +1,52 @@
-<div style="max-width: 900px; margin: auto; font-family: sans-serif;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subjective Evaluation Form</title>
+  <style>
+    body {
+      max-width: 900px;
+      margin: auto;
+      font-family: sans-serif;
+    }
+    h2, h3 {
+      background-color: #d4edda;
+      border-left: 6px solid #2e7d32;
+      padding: 8px 12px;
+    }
+    h3 {
+      color: green;
+      border-bottom: 2px solid #2196F3;
+      background-color: unset;
+      border-left: none;
+    }
+    .grid-4col, .grid-3col {
+      display: grid;
+      gap: 10px;
+    }
+    .grid-4col {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .grid-3col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    #motionsAffecting > div,
+    #adlsAffecting > div {
+      display: flex;
+      flex-direction: column;
+    }
+    .detailInput {
+      display: none;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
 
-<h2 style="background-color:#d4edda; border-left: 6px solid #2e7d32; padding: 8px 12px;">Initial Evaluation – Subjective Section</h2>
-
+<h2>Initial Evaluation – Subjective Section</h2>
 
 <!-- RX BODY PARTS -->
-
 <h3>Rx Body Parts</h3>
 <div id="rxBodyParts" class="grid-4col">
   <div><label><input type="checkbox" id="head"> Head</label></div>
@@ -101,30 +143,20 @@
   </div>
 </div><br>
 
-
-
 <!-- MASSAGE HISTORY -->
-
-<p>Have they had a professional massage before?
-
-<input type="checkbox" name="hadMassage" value="Yes"> Yes
-
-<input type="checkbox" name="hadMassage" value="No"> No
-
+<h3>Massage & Client History</h3>
+<p>
+  Have they had a professional massage before?
+  <label><input type="checkbox" name="hadMassage" value="Yes"> Yes</label>
+  <label><input type="checkbox" name="hadMassage" value="No"> No</label>
 </p>
-
-
-<p>Is the client a new client to CMT?
-
-<input type="checkbox" name="newClient" value="Yes"> Yes
-
-<input type="checkbox" name="newClient" value="No"> No
-
+<p>
+  Is the client a new client to CMT?
+  <label><input type="checkbox" name="newClient" value="Yes"> Yes</label>
+  <label><input type="checkbox" name="newClient" value="No"> No</label>
 </p>
-
 
 <!-- INJURY REPORT -->
-
 <h3>INJURY REPORT</h3>
 <label>Date injury occurred:</label><br>
 <input type="date" id="injuryDate" style="width: 100%;"><br><br>
@@ -139,198 +171,39 @@
 <div id="medList"><input type="text" style="width: 100%; margin-bottom: 5px;"></div>
 <button type="button" onclick="addField('medList')">➕ Add Medication</button><br><br>
 
-
 <!-- PAIN REPORT -->
-
 <h3>PAIN REPORT</h3>
 <div id="painReportTable"></div><br>
 
-
-<!-- SLEEP REPORT -->
-
-<h3 style="color: green; border-bottom: 2px solid #2196F3;">SLEEP REPORT</h3>
-
-<div style="display: flex; gap: 20px;">
-
-<div style="flex: 1;">
-
-<label>Total sleep hours/night:</label>
-
-<select id="sleepHours" style="width: 100%;">
-
-<option value="">--</option>
-
-<option>1 hour</option>
-
-<option>2 hours</option>
-
-<option>3 hours</option>
-
-<option>4 hours</option>
-
-<option>5 hours</option>
-
-<option>6 hours</option>
-
-<option>7 hours</option>
-
-<option>8 hours</option>
-
-<option>9 hours</option>
-
-<option>10+ hours</option>
-
-</select>
-
-</div>
-
-<div style="flex: 1;">
-
-<label>Wake-ups due to pain/night:</label>
-
-<select id="wakeUps" style="width: 100%;">
-
-<option value="">--</option>
-
-<option>1</option>
-
-<option>2</option>
-
-<option>3</option>
-
-<option>4</option>
-
-<option>5</option>
-
-<option>6</option>
-
-<option>7</option>
-
-<option>8</option>
-
-<option>9</option>
-
-<option>10+</option>
-
-</select>
-
-</div>
-
-</div><br>
-
-
-<div style="display: flex; gap: 20px;">
-
-<div style="flex: 1;">
-
-<label>Sleep position before injury:</label>
-
-<select id="sleepBefore" style="width: 100%;">
-
-<option value="">--</option>
-
-<option>Stomach</option>
-
-<option>Back</option>
-
-<option>Side</option>
-
-</select>
-
-</div>
-
-<div style="flex: 1;">
-
-<label>Sleep position after injury:</label>
-
-<select id="sleepAfter" style="width: 100%;">
-
-<option value="">--</option>
-
-<option>Stomach</option>
-
-<option>Back</option>
-
-<option>Side</option>
-
-</select>
-
-</div>
-
-</div><br>
-
 <!-- MOTIONS AFFECTING DAILY LIVING -->
-
 <h3>MOTIONS AFFECTING DAILY LIVING</h3>
 <div id="motionsAffecting" class="grid-4col">
   <div><label><input type="checkbox" value="Sitting"> Sitting</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Sitting" style="width: 100%;"></div></div>
   <div><label><input type="checkbox" value="Standing"> Standing</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Standing" style="width: 100%;"></div></div>
 </div><br>
 
-
 <!-- ADLs AFFECTED BY PAIN -->
-
 <h3>ADLs AFFECTED BY PAIN</h3>
 <div id="adlsAffecting" class="grid-4col">
   <div><label><input type="checkbox" value="Ambulating"> Ambulating</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Ambulating" style="width: 100%;"></div></div>
   <div><label><input type="checkbox" value="Eating"> Eating</label><button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput"><input type="text" placeholder="Details about Eating" style="width: 100%;"></div></div>
 </div><br>
 
-
 <!-- WORK STATUS -->
-
-<h3 style="color: green; border-bottom: 2px solid #2196F3;">WORK STATUS</h3>
-
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-
-<div><label><input type="radio" name="workStatus"> Full Time</label></div>
-
-<div><label><input type="radio" name="workStatus"> Part Time</label></div>
-
-<div><label><input type="radio" name="workStatus"> Not Working</label></div>
-
-<div><label><input type="radio" name="workStatus"> Full Time Modified Duty</label></div>
-
-<div><label><input type="radio" name="workStatus"> Part Time Modified Duty</label></div>
-
+<h3>WORK STATUS</h3>
+<div class="grid-3col">
+  <div><label><input type="radio" name="workStatus"> Full Time</label></div>
+  <div><label><input type="radio" name="workStatus"> Part Time</label></div>
+  <div><label><input type="radio" name="workStatus"> Not Working</label></div>
 </div><br>
 
-
-<label>Self-care tasks done at home:</label>
-
+<label>Self-care tasks done at home:</label><br>
 <textarea id="selfCare" style="width: 100%;"></textarea><br><br>
-
-
-<label>Additional reporting:</label>
-
+<label>Additional reporting:</label><br>
 <textarea id="additionalReporting" style="width: 100%;"></textarea><br><br>
 
-<button onclick="
+<button onclick="copyToClipboard()">📋 Copy Subjective Section</button>
 
-<script>
-const rxParts = [
-  "Head", "Cervical", "Thoracic", "Lumbar", "Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand",
-  "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"
-];
-
-function buildRxChecklist() {
-  const container = document.getElementById("rxBodyParts");
-  rxParts.forEach(part => {
-    const div = document.createElement("div");
-    const id = part.replace(/\s+/g, '').toLowerCase();
-    let html = `<label><input type='checkbox' id='${id}' onchange='updatePainReport()'> ${part}</label>`;
-    if (["Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand", "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"].includes(part)) {
-      html += ` <select id='${id}Side' onchange='updatePainReport()'>
-        <option value=''>--</option>
-        <option value='R'>R</option>
-        <option value='L'>L</option>
-        <option value='BL'>BL</option>
-      </select>`;
-    }
-    div.innerHTML = html;
-    container.appendChild(div);
-  });
-}
 <script>
 function toggleDetailInput(button) {
   const detailDiv = button.nextElementSibling;
@@ -366,8 +239,8 @@ function copyToClipboard() {
     return null;
   }).filter(Boolean);
 
-  output.push("SUBJECTIVE
-The patient has an Rx for the following body parts:");
+  output.push(`SUBJECTIVE
+The patient has an Rx for the following body parts:`);
   output.push(...rxChecked, "");
 
   // Massage History
@@ -380,36 +253,36 @@ The patient has an Rx for the following body parts:");
 `);
 
   // Injury Report
-  output.push("INJURY REPORT
-");
+  output.push(`INJURY REPORT
+`);
   output.push(`Date injury occurred: ${document.getElementById("injuryDate")?.value}`);
-  output.push("
-Details of how injury occurred:");
+  output.push(`
+Details of how injury occurred:`);
   output.push(`- ${document.getElementById("injuryDetails")?.value}`);
 
   const treatments = Array.from(document.querySelectorAll('#treatmentList input')).map(el => el.value.trim()).filter(Boolean);
   if (treatments.length) {
-    output.push("
-Other treatments received:");
-    treatments.forEach(t => output.push("- " + t));
+    output.push(`
+Other treatments received:`);
+    treatments.forEach(t => output.push(`- ${t}`));
   }
 
   const effectiveness = document.getElementById("treatmentEffectiveness")?.value;
-  if (effectiveness) output.push("
+  if (effectiveness) output.push(`
 Effectiveness of other treatments:
-- " + effectiveness);
+- ${effectiveness}`);
 
   const meds = Array.from(document.querySelectorAll('#medList input')).map(el => el.value.trim()).filter(Boolean);
-  if (meds.length) output.push("
+  if (meds.length) output.push(`
 Medications prescribed:
-- " + meds.join(', '));
+- ${meds.join(', ')}`);
 
   // Pain Report
-  output.push("
+  output.push(`
 
 PAIN REPORT
 
-Pain reported in:");
+Pain reported in:`);
   const painRows = document.querySelectorAll('#painReportTable tr');
   painRows.forEach((tr, i) => {
     if (i === 0) return; // skip header row
@@ -419,49 +292,48 @@ Pain reported in:");
   });
 
   // Sleep Report
-  output.push("
-SLEEP REPORT
-");
-  output.push(`-Total sleep per night: ${document.getElementById("sleepHours")?.value}`);
-  output.push(`-Total times waking due to pain: ${document.getElementById("wakeUps")?.value}x/night`);
-  output.push(`-Sleep position before injury: ${document.getElementById("sleepBefore")?.value}`);
-  output.push(`-Sleep position after injury: ${document.getElementById("sleepAfter")?.value}`);
+  output.push(`
+SLEEP REPORT`);
+  output.push(`- Total sleep per night: ${document.getElementById("sleepHours")?.value}`);
+  output.push(`- Total times waking due to pain: ${document.getElementById("wakeUps")?.value}x/night`);
+  output.push(`- Sleep position before injury: ${document.getElementById("sleepBefore")?.value}`);
+  output.push(`- Sleep position after injury: ${document.getElementById("sleepAfter")?.value}`);
 
   // Motions
   const motions = Array.from(document.querySelectorAll('#motionsAffecting input[type=checkbox]:checked')).map(cb => {
     const txt = cb.closest('div').querySelector('input[type=text]')?.value;
     return txt ? `${cb.value} (${txt})` : cb.value;
   });
-  output.push("
+  output.push(`
 MOTIONS AFFECTING DAILY LIVING
--" + motions.join(', '));
+- ${motions.join(', ')}`);
 
   // ADLs
   const adls = Array.from(document.querySelectorAll('#adlsAffecting input[type=checkbox]:checked')).map(cb => {
     const txt = cb.closest('div').querySelector('input[type=text]')?.value;
     return txt ? `${cb.value} (${txt})` : cb.value;
   });
-  output.push("
+  output.push(`
 ADLs AFFECTED BY PAIN
--" + adls.join(', '));
+- ${adls.join(', ')}`);
 
   // Work Status
   const workStatus = document.querySelector('input[name=workStatus]:checked')?.parentElement?.innerText.trim();
-  if (workStatus) output.push("
+  if (workStatus) output.push(`
 WORK STATUS
--" + workStatus);
+- ${workStatus}`);
 
   // Self-Care and Additional
   const selfCare = document.getElementById('selfCare')?.value;
-  if (selfCare) output.push("
+  if (selfCare) output.push(`
 
 Self care tasks done at home:
--" + selfCare);
+- ${selfCare}`);
   const additional = document.getElementById('additionalReporting')?.value;
-  if (additional) output.push("
+  if (additional) output.push(`
 
 Additional Reporting:
--" + additional);
+- ${additional}`);
 
   // Final copy
   const text = document.createElement('textarea');
@@ -476,5 +348,6 @@ Additional Reporting:
   alert('Subjective Section copied to clipboard.');
 }
 </script>
+
 </body>
 </html>
