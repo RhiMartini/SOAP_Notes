@@ -272,16 +272,6 @@
 
 <div><label><input type="checkbox" value="Climbing"> Climbing</label> <button type="button" onclick="toggleDetailInput(this)">➕</button><div class="detailInput" style="display: none;"><input type="text" placeholder="Details about Climbing" style="width: 100%;"></div></div>
 
-</div><br>
-<script>
-function toggleDetailInput(button) {
-  const detailDiv = button.nextElementSibling;
-  if (detailDiv) {
-    detailDiv.style.display = detailDiv.style.display === 'none' ? 'block' : 'none';
-  }
-}
-</script>
-
 
 <!-- ADLs AFFECTED BY PAIN -->
 
@@ -482,141 +472,96 @@ alert('Subjective Section copied!');
 
 <textarea id="clipboardOutput" style="position: absolute; left: -9999px;"></textarea>
 <script>
-
 const rxParts = [
-
-"Head", "Cervical", "Thoracic", "Lumbar", "Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand",
-
-"Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"
-
+  "Head", "Cervical", "Thoracic", "Lumbar", "Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand",
+  "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"
 ];
 
-
 function buildRxChecklist() {
+  const container = document.getElementById("rxBodyParts");
+  const select = document.getElementById("additionalPartSelect");
 
-const container = document.getElementById("rxBodyParts");
+  rxParts.forEach(part => {
+    const div = document.createElement("div");
+    const id = part.replace(/\s+/g, '').toLowerCase();
 
-const select = document.getElementById("additionalPartSelect");
+    let html = `<input type='checkbox' id='${id}' onchange='updatePainReport()'> ${part}`;
 
-rxParts.forEach(part => {
+    if (["Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand", "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"].includes(part)) {
+      html += ` <select id='${id}Side' onchange='updatePainReport()'>
+        <option value=''>--</option>
+        <option value='R'>R</option>
+        <option value='L'>L</option>
+        <option value='BL'>BL</option>
+      </select>`;
+    }
 
-const div = document.createElement("div");
+    div.innerHTML = html;
+    container.appendChild(div);
 
-const id = part.replace(/\s+/g, '').toLowerCase();
-
-let html = `<input type='checkbox' id='${id}' onchange='updatePainReport()'> ${part}`;
-
-if (["Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand", "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"].includes(part)) {
-
-html += ` <select id='${id}Side' onchange='updatePainReport()'>
-
-<option value=''>--</option>
-
-<option value='R'>R</option>
-
-<option value='L'>L</option>
-
-<option value='BL'>BL</option>
-
-</select>`;
-
+    const option = document.createElement("option");
+    option.value = part;
+    option.textContent = part;
+    select.appendChild(option);
+  });
 }
-
-div.innerHTML = html;
-
-container.appendChild(div);
-
-
-const option = document.createElement("option");
-
-option.value = part;
-
-option.textContent = part;
-
-select.appendChild(option);
-
-});
-
-}
-
 
 function addField(containerId) {
-
-const container = document.getElementById(containerId);
-
-const input = document.createElement('input');
-
-input.type = 'text';
-
-input.style = 'width: 100%; margin-bottom: 5px;';
-
-container.appendChild(input);
-
+  const container = document.getElementById(containerId);
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.style = 'width: 100%; margin-bottom: 5px;';
+  container.appendChild(input);
 }
-
 
 function addAdditionalPart() {
+  const part = document.getElementById("additionalPartSelect").value;
+  const side = document.getElementById("additionalSideSelect").value;
+  const list = document.getElementById("additionalPartsList");
 
-const part = document.getElementById("additionalPartSelect").value;
+  if (!part) return;
 
-const side = document.getElementById("additionalSideSelect").value;
+  const item = document.createElement("li");
+  item.textContent = side ? `${side} ${part}` : part;
+  list.appendChild(item);
 
-const list = document.getElementById("additionalPartsList");
-
-if (!part) return;
-
-const item = document.createElement("li");
-
-item.textContent = side ? `${side} ${part}` : part;
-
-list.appendChild(item);
-
-updatePainReport();
-
+  updatePainReport();
 }
-
 
 function updatePainReport() {
+  const painTable = document.getElementById("painReportTable");
+  let html = `<table style='width:100%;'><tr><th>Body Part</th><th>Pain Level</th></tr>`;
 
-const painTable = document.getElementById("painReportTable");
+  rxParts.forEach(part => {
+    const id = part.replace(/\s+/g, '').toLowerCase();
+    const cb = document.getElementById(id);
 
-let html = `<table style='width:100%;'><tr><th>Body Part</th><th>Pain Level</th></tr>`;
+    if (cb && cb.checked) {
+      const side = document.getElementById(id + 'Side')?.value;
+      const label = side ? `${side} ${part}` : part;
+      html += `<tr><td>${label}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
+    }
+  });
 
-rxParts.forEach(part => {
+  const list = document.getElementById("additionalPartsList").children;
+  for (let item of list) {
+    html += `<tr><td>${item.textContent}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
+  }
 
-const id = part.replace(/\s+/g, '').toLowerCase();
-
-const cb = document.getElementById(id);
-
-if (cb && cb.checked) {
-
-const side = document.getElementById(id + 'Side')?.value;
-
-const label = side ? `${side} ${part}` : part;
-
-html += `<tr><td>${label}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
-
+  html += `</table>`;
+  painTable.innerHTML = html;
 }
 
-});
-
-const list = document.getElementById("additionalPartsList").children;
-
-for (let item of list) {
-
-html += `<tr><td>${item.textContent}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
-
-}
-
-html += `</table>`;
-
-painTable.innerHTML = html;
-
+// ✅ Toggle detail input visibility (fixes the + button)
+function toggleDetailInput(button) {
+  const detailDiv = button.parentElement.querySelector('.detailInput');
+  if (detailDiv) {
+    detailDiv.style.display = detailDiv.style.display === 'none' ? 'block' : 'none';
+  }
 }
 
 buildRxChecklist();
+</script>
 
-</script>
-</script>
 </body>
 </html>
