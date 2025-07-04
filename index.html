@@ -561,6 +561,213 @@ function toggleDetailInput(button) {
 }
 
 buildRxChecklist();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subjective Evaluation Form</title>
+  <style>
+    body {
+      max-width: 900px;
+      margin: auto;
+      font-family: sans-serif;
+    }
+    h2, h3 {
+      background-color: #d4edda;
+      border-left: 6px solid #2e7d32;
+      padding: 8px 12px;
+    }
+    h3 {
+      color: green;
+      border-bottom: 2px solid #2196F3;
+      background-color: unset;
+      border-left: none;
+    }
+    .grid-4col, .grid-3col {
+      display: grid;
+      gap: 10px;
+    }
+    .grid-4col {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .grid-3col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .detailInput {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<!-- ... full form HTML content (unchanged) ... -->
+<script>
+const rxParts = [
+  "Head", "Cervical", "Thoracic", "Lumbar", "Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand",
+  "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"
+];
+
+function buildRxChecklist() {
+  const container = document.getElementById("rxBodyParts");
+  const select = document.getElementById("additionalPartSelect");
+  rxParts.forEach(part => {
+    const div = document.createElement("div");
+    const id = part.replace(/\s+/g, '').toLowerCase();
+    let html = `<input type='checkbox' id='${id}' onchange='updatePainReport()'> ${part}`;
+    if (["Shoulder", "Upper Extremity", "Elbow", "Wrist", "Hand", "Fingers", "Hips", "Lower Extremities", "Knee", "Ankle", "Foot"].includes(part)) {
+      html += ` <select id='${id}Side' onchange='updatePainReport()'>
+        <option value=''>--</option>
+        <option value='R'>R</option>
+        <option value='L'>L</option>
+        <option value='BL'>BL</option>
+      </select>`;
+    }
+    div.innerHTML = html;
+    container.appendChild(div);
+
+    const option = document.createElement("option");
+    option.value = part;
+    option.textContent = part;
+    select.appendChild(option);
+  });
+}
+
+function addField(containerId) {
+  const container = document.getElementById(containerId);
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.style = 'width: 100%; margin-bottom: 5px;';
+  container.appendChild(input);
+}
+
+function addAdditionalPart() {
+  const part = document.getElementById("additionalPartSelect").value;
+  const side = document.getElementById("additionalSideSelect").value;
+  const list = document.getElementById("additionalPartsList");
+  if (!part) return;
+  const item = document.createElement("li");
+  item.textContent = side ? `${side} ${part}` : part;
+  list.appendChild(item);
+  updatePainReport();
+}
+
+function updatePainReport() {
+  const painTable = document.getElementById("painReportTable");
+  let html = `<table style='width:100%;'><tr><th>Body Part</th><th>Pain Level</th></tr>`;
+  rxParts.forEach(part => {
+    const id = part.replace(/\s+/g, '').toLowerCase();
+    const cb = document.getElementById(id);
+    if (cb && cb.checked) {
+      const side = document.getElementById(id + 'Side')?.value;
+      const label = side ? `${side} ${part}` : part;
+      html += `<tr><td>${label}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
+    }
+  });
+  const list = document.getElementById("additionalPartsList").children;
+  for (let item of list) {
+    html += `<tr><td>${item.textContent}</td><td><select>${[...Array(11).keys()].map(n => `<option>${n}</option>`).join('')}</select> /10</td></tr>`;
+  }
+  html += `</table>`;
+  painTable.innerHTML = html;
+}
+
+function toggleDetailInput(button) {
+  const detailDiv = button.parentElement.querySelector('.detailInput');
+  if (detailDiv) {
+    detailDiv.style.display = detailDiv.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+function copyToClipboard() {
+  const output = [];
+
+  const rxChecked = Array.from(document.querySelectorAll('#rxBodyParts input[type=checkbox]:checked')).map(cb => {
+    const label = cb.nextSibling.textContent.trim();
+    return ` - ${label}`;
+  });
+  output.push("The patient has an Rx for the following body parts:");
+  output.push(...rxChecked, "\n");
+
+  const hadMassage = document.querySelector('input[name=hadMassage]:checked')?.value;
+  const newClient = document.querySelector('input[name=newClient]:checked')?.value;
+  if (hadMassage === 'Yes') output.push("The patient has had a professional massage before.");
+  if (newClient === 'Yes') output.push("The patient is new to CMT and has had pain numbers, trigger points, communication expectations, and treatment plans for this session explained to them");
+  output.push("\nThe patient reports the following:\n\n_____________________________________________\n\nINJURY REPORT\n\n_____________________________________________\n");
+
+  output.push("1. Date injury occurred:\n" + document.getElementById("injuryDate").value);
+  output.push("\n2. Details of how the injury occurred:\n" + document.getElementById("injuryDetails").value);
+
+  const treatments = Array.from(document.querySelectorAll('#treatmentList input')).map(el => el.value.trim()).filter(Boolean);
+  if (treatments.length) {
+    output.push("\n3. Other treatments received for this injury:");
+    treatments.forEach(t => output.push("-" + t));
+  }
+
+  const effectiveness = document.getElementById("treatmentEffectiveness").value;
+  if (effectiveness) output.push("\n4. Effectiveness of other treatments received:\n- " + effectiveness);
+
+  const meds = Array.from(document.querySelectorAll('#medList input')).map(el => el.value.trim()).filter(Boolean);
+  if (meds.length) {
+    output.push("\n5. Medications prescribed for injury:");
+    meds.forEach(m => output.push("-" + m));
+  }
+
+  output.push("\n_____________________________________________\n\nPAIN REPORT\n\n_____________________________________________\n");
+  output.push("1. Patient reports pain in the following prescribed body parts on a scale of 1-10/10:");
+  document.querySelectorAll('#painReportTable tr').forEach((tr, i) => {
+    if (i === 0) return;
+    const part = tr.children[0].innerText;
+    const level = tr.children[1].querySelector('select').value;
+    output.push("-" + part + " " + level + "/10");
+  });
+
+  output.push("\n2. Patient reports pain is improved when:\n- ");
+  output.push("\n3. Patient reports pain worsens when:\n- ");
+
+  output.push("\n_____________________________________________\n\nSLEEP REPORT\n\n_____________________________________________\n");
+  output.push("1. Total number of hours patient reports sleeping each night:\n- " + document.getElementById("sleepHours").value);
+  output.push("2. Total number of times the patient reports waking due to pain each night:\n- " + document.getElementById("wakeUps").value);
+  output.push("3. Position patient reports sleeping in prior to injury and after injury:\n- Prior to injury: " + document.getElementById("sleepBefore").value + "\n- After injury: " + document.getElementById("sleepAfter").value);
+
+  output.push("\n_____________________________________________\n\nMOTIONS THAT AFFECT ACTIVITIES OF DAILY LIVING\n\n_____________________________________________\n");
+  output.push("1. The patient reports difficulty with the following motions:\n");
+  document.querySelectorAll('#motionsAffecting > div').forEach(div => {
+    const cb = div.querySelector('input[type=checkbox]');
+    const txt = div.querySelector('input[type=text]')?.value;
+    output.push(`[ ${cb.checked ? 'x' : ' '} ] ${cb.value}${txt ? '  ' + txt : ''}`);
+  });
+
+  output.push("\n_____________________________________________\n\nACTIVITIES OF DAILY LIVING AFFECTED BY PAIN\n\n_____________________________________________\n");
+  output.push("1. The patient reports the following ADLs are affected:\n\n");
+  document.querySelectorAll('#adlsAffecting > div').forEach(div => {
+    const cb = div.querySelector('input[type=checkbox]');
+    const txt = div.querySelector('input[type=text]')?.value;
+    output.push(`[ ${cb.checked ? 'x' : ' '} ] ${cb.value}${txt ? '  ' + txt : ''}`);
+  });
+
+  const workStatus = document.querySelector('input[name=workStatus]:checked')?.parentElement.innerText.trim();
+  if (workStatus) output.push("\n2. Patient reports current work status as:\n- " + workStatus);
+
+  const selfCare = document.getElementById('selfCare')?.value;
+  if (selfCare) output.push("\n3. Patient reports performing the following self-care tasks at home:\n- " + selfCare);
+
+  const additional = document.getElementById('additionalReporting')?.value;
+  if (additional) output.push("\n-Additional reporting here:\n-" + additional);
+
+  const text = document.createElement('textarea');
+  text.style.position = 'absolute';
+  text.style.left = '-9999px';
+  text.value = output.join("\n");
+  document.body.appendChild(text);
+  text.select();
+  document.execCommand('copy');
+  document.body.removeChild(text);
+  alert('Subjective Section copied to clipboard in formatted style.');
+}
+</script>
+<button onclick="copyToClipboard()">📋 Copy Subjective Section</button>
+</body>
+</html>
 </script>
 
 </body>
